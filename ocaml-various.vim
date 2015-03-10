@@ -46,3 +46,24 @@ augroup MLI
   autocmd!
   autocmd BufWritePre *.mli silent call s:FixTypeDecls()                                                                                                                  
 augroup END
+
+" Bringing a function definition to all args on one line to one arg per line
+" unsure how useful this actually is. multi -> one is easy with v/=J, one -> multi is a bit annoying though.
+" atm this fails on optional args with defaults, shouldn't be hard to fix
+
+function! s:ToOneLine()
+  normal! j
+  ?^let
+  while match(getline("."), "=") <= 0
+    normal! J
+  endwhile
+endfunction
+command! -nargs=0 Uno call s:ToOneLine()
+
+function! s:ToMultiLine()
+  normal! _w
+  while match(getline("."), "^\\s*=\\s*$") < 0
+    normal! f r^M
+  endwhile
+endfunction
+command! -nargs=0 Multi call s:ToMultiLine()
