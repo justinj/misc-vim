@@ -1,0 +1,17 @@
+function! s:DBExecute()
+  call writefile([getline(".")], "/tmp/dbgoto")
+  wq!
+endfunction
+command! -nargs=0 DBExecute call s:DBExecute()
+
+function! s:SetUpDB()
+  nnoremap <buffer> <CR> :DBExecute<cr>
+endfunction
+
+augroup dirbuddy
+  autocmd!
+  autocmd BufRead .dirbuddy call s:SetUpDB()
+augroup END
+
+" alias db='vim ~/.dirbuddy && echo $(cat /tmp/dbgoto) && cd $(cat /tmp/dbgoto)'
+" alias dbadd='pwd >> ~/.dirbuddy'
